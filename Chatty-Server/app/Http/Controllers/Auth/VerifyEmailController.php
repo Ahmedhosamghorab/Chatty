@@ -3,29 +3,20 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Auth\Events\Verified;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\RedirectResponse;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 
 class VerifyEmailController extends Controller
 {
-    /**
-     * Mark the authenticated user's email address as verified.
-     */
-    public function __invoke(EmailVerificationRequest $request): RedirectResponse
-    {
-        if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(
-                config('app.frontend_url').'/dashboard?verified=1'
-            );
+    public function VerifyEmail(Request $request , $id){
+        if (!URL::hasValidSignature($request)) {
+            return response()->json(['message' => 'Invalid or expired verification link'], 403);
         }
+        $user = User::findOrFail($id);
+        $user->email_verified_at = now();
+        $user->save();
+        return view("auth.verified" , compact("user"));
 
-        if ($request->user()->markEmailAsVerified()) {
-            event(new Verified($request->user()));
-        }
-
-        return redirect()->intended(
-            config('app.frontend_url').'/dashboard?verified=1'
-        );
     }
 }
