@@ -20,7 +20,9 @@ class RegisterController extends Controller
         }
         $user = User::create($validator->validated());
         $token = $user->createToken("access_token")->plainTextToken;
-        return response()->json(['message' => 'User created successfully' , "token" => $token]);
+        return response()->json(['message' => 'User created successfully' , "token" => $token])
+        ->cookie('name', 'value', 60, '/', null, true, true, false, 'None');
+        ;
 
     }
 }
