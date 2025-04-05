@@ -32,6 +32,8 @@ class LoginController extends Controller
             return response()->json([
                 'message' => 'Login successful',
                 'access_token' => $token,
+                'is_verified' => $user->hasVerifiedEmail(),
+                'user' => $user
             ]);
         }
 

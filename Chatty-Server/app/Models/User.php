@@ -19,6 +19,9 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var list<string>
      */
+    public function friends(){
+        return $this->hasMany(Friend::class  );
+    }
     protected $fillable = [
         'name',
         'email',
