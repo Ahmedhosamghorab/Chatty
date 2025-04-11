@@ -4,10 +4,11 @@ import { ChatContext } from "../Hooks/useChat";
 import ProfileAvatar from "../assets/user(1).png";
 
 function Sidebar() {
-  const { GetFriends, friends, isFetchingFriends } = useContext(ChatContext);
+  const { GetFriends, friends, isFetchingFriends , GetChat} = useContext(ChatContext);
 
   useEffect(() => {
     GetFriends();
+
   }, []);
 
   return (
@@ -25,11 +26,15 @@ function Sidebar() {
             <Loader className="animate-spin" />
           </div>
         ) : (
-          friends?.map((friend) => (
-            <div key={friend.id} className="flex items-center space-x-3 p-2 rounded hover:bg-base-300 cursor-pointer transition">
+          friends?.map((friend  , key) => (
+            <button key={key} onClick={()=>{
+              GetChat(friend.id)
+            }}>
+            <div  className="flex items-center space-x-3  rounded hover:bg-base-300 cursor-pointer transition">
               <img src={ProfileAvatar} className="h-10 w-10 rounded-full" alt="Profile" />
-              <p className="text-base-content hidden lg:inline text-sm font-medium">{friend.friend.name}</p>
+              <p className="text-base-content hidden lg:inline text-sm font-medium">{friend.name}</p>
             </div>
+            </button>
           ))
         )}
       </div>

@@ -1,9 +1,8 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 import { axiosInstance } from "../Utils/Axios";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
-import { Loader } from "lucide-react";
-import { Navigate } from "react-router-dom";
+import { Loader, Rss } from "lucide-react";
 export const AuthContext = createContext();
 export const useAuth = () => {
   const [authUser, setAuthUser] = useState();
@@ -88,8 +87,10 @@ export const useAuth = () => {
         }
       );
       toast.success("Verification email sent!", { id: toastId });
+      return res
+
     } catch (error) {
-      toast.error("Error occurred while sending verification email.", { id: toastId });
+      toast.error(error.response.message, { id: toastId });
 
     } finally {
       setIsVerifingEmail(false);
@@ -108,6 +109,7 @@ export const useAuth = () => {
         );
         toast.success("Logged Out Successfully")
         setAuthUser(null)
+        return res
       } catch (error) {
         toast.error(error.response.message)
       } 

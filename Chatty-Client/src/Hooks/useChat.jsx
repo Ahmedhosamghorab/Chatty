@@ -6,7 +6,9 @@ export const ChatContext = createContext();
 export const useChat = () => {
   const [friends, setfriends] = useState();
   const [isFetchingFriends, setIsFetchingFriends] = useState();
-
+  const [chat , setChat] = useState()
+  const [isFetchingChat, setisFetchingChat] = useState();
+  const [friendId , setFriendId] = useState()
   const GetFriends = async () => {
     setIsFetchingFriends(true)
     try {
@@ -18,16 +20,52 @@ export const useChat = () => {
         console.log(res.data)
         setfriends(res.data.friends)
     } catch (error) {
+      console.log(error.response)
       toast.error(error.response.data.message);
     }finally{
         setIsFetchingFriends(false)
     }
   };
- 
+  const GetChat = async (friend_id) => {
+    setisFetchingChat(true)
+    setFriendId(friend_id)
+    try {
+           const res = await axiosInstance.post("/messages",{friend_id} , {
+             headers: {
+               Authorization: "Bearer " + Cookies.get("access_token"),
+             },
+           });
+        setChat(res.data)
+    } catch (error) {
+      console.log(error.response)
+      toast.error(error.response.data.message);
+    }finally{
+      setisFetchingChat(false)
+    }
+  };
+  const SendMessage = async (reciver_id , content) => {
+    try {
+           const res = await axiosInstance.post("/send-message",{reciver_id  , content} , {
+             headers: {
+               Authorization: "Bearer " + Cookies.get("access_token"),
+             },
+           });
+           return res
+    } catch (error) {
+      console.log(error)
+
+      toast.error(error.response.data.message);
+    }
+  };
   return {
     friends,
     GetFriends,
-    isFetchingFriends
+    isFetchingFriends,
+    chat,
+    isFetchingChat,
+    GetChat,
+    SendMessage,
+    friendId
   };
 };
 

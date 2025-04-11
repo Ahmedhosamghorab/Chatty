@@ -13,8 +13,10 @@ class FriendController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $friends = $user->friends()->with('friend')->get();
-        return response()->json(["friends" => $friends]);
+        $friends = $user->friends;
+        $friendsOf = $user->friendOf;
+        $allFrinds = $friends->merge($friendsOf);
+        return response()->json(["friends" => $allFrinds]);
     }
 
     /**

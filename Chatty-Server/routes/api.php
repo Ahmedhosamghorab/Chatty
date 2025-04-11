@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\SendEmailVerificationController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\FriendController;
+use App\Http\Controllers\MessageController;
 use App\Models\Friend;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,5 +23,11 @@ Route::prefix("auth")->group(function (){
 });
 Route::controller(FriendController::class)->group(function () {
     Route::get('/friends', 'index')->middleware(["auth:sanctum" , "verified"]);
+
+});
+Route::controller(MessageController::class)->group(function () {
+    Route::post('/messages', 'index')->middleware(["auth:sanctum" , "verified"]);
+    Route::post('/send-message', 'store')->middleware(["auth:sanctum" , "verified"]);
+
 
 });

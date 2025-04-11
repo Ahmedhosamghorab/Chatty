@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Friend;
+use App\Models\Message;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -14,8 +15,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Friend::factory(400)->create();
-        // User::factory(40)->create();
+        User::factory(50)->create();
+        Friend::factory(100)->create();
+        // Message::factory(500)->create();
 
         // User::factory()->create([
         //     'name' => 'Test User',

@@ -19,10 +19,31 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var list<string>
      */
-    public function friends(){
-        return $this->hasMany(Friend::class  );
+    public function friends()
+    {
+        return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id')
+                    ->withTimestamps();
     }
-    protected $fillable = [
+    public function friendOf()
+    {
+        return $this->belongsToMany(User::class, 'friends', 'friend_id', 'user_id')
+                    ->withTimestamps();
+    }
+    public function messagesWith($friendId)
+    {
+        return Message::where(function ($query) use ($friendId) {
+            $query->where('sender_id', $this->id)
+                  ->where('reciver_id', $friendId);
+        })->orWhere(function ($query) use ($friendId) {
+            $query->where('sender_id', $friendId)
+                  ->where('reciver_id', $this->id);
+        })->get();
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }    protected $fillable = [
         'name',
         'email',
         'password',
